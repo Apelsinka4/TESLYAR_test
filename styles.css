@@ -284,6 +284,34 @@ select {
   line-height: 1.3;
 }
 
+.summary-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.summary-actions button {
+  border: 0;
+  border-radius: 8px;
+  background: #202623;
+  color: white;
+  min-height: 38px;
+  padding: 0 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.summary-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
+.summary-actions span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
 .section-grid {
   margin-top: 18px;
   display: grid;
@@ -485,7 +513,8 @@ th {
   }
 
   .topbar,
-  .panel-header {
+  .panel-header,
+  .summary-actions {
     display: grid;
   }
 

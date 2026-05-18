@@ -111,6 +111,7 @@ const state = {
   months: [],
   currentMonth: null,
   previousMonth: null,
+  summaryMode: "local",
 };
 
 function parseMonth(filename) {
@@ -516,6 +517,82 @@ function buildAiInsights(portfolio, countryComparisons, productComparisons) {
   };
 }
 
+function buildClaudePayload() {
+  const currentLabel = state.months.find((month) => month.key === state.currentMonth)?.label || "поточний місяць";
+  const previousLabel = state.months.find((month) => month.key === state.previousMonth)?.label || "попередній місяць";
+  const countryRows = state.data.countryComparisons.map((row) => ({
+    country: row.countryLabel,
+    sales: Math.round(row.salesCurrent),
+    salesDelta: Math.round(row.salesDelta),
+    netProfit: Math.round(row.netProfitCurrent),
+    netProfitDelta: Math.round(row.netProfitDelta),
+    margin: Number(row.marginCurrent.toFixed(1)),
+    marginDelta: Number(row.marginDelta.toFixed(1)),
+    ppcAcos: Number(row.ppcAcosCurrent.toFixed(1)),
+  }));
+  const productRows = [...state.data.productComparisons]
+    .sort((a, b) => b.attentionScore - a.attentionScore)
+    .slice(0, 8)
+    .map((row) => ({
+      asin: row.asin,
+      sku: row.sku,
+      country: row.country,
+      name: row.name,
+      sales: Math.round(row.salesCurrent),
+      salesDelta: Math.round(row.salesDelta),
+      netProfit: Math.round(row.netProfitCurrent),
+      netProfitDelta: Math.round(row.netProfitDelta),
+      margin: Number(row.marginCurrent.toFixed(1)),
+    }));
+  return {
+    currentMonth: currentLabel,
+    previousMonth: previousLabel,
+    portfolio: {
+      sales: Math.round(state.data.portfolio.current.sales),
+      salesDelta: Math.round(state.data.portfolio.comparison.salesDelta),
+      netProfit: Math.round(state.data.portfolio.current.netProfit),
+      netProfitDelta: Math.round(state.data.portfolio.comparison.netProfitDelta),
+      margin: Number(state.data.portfolio.current.margin.toFixed(1)),
+      marginDelta: Number(state.data.portfolio.comparison.marginDelta.toFixed(1)),
+    },
+    countries: countryRows,
+    focusProducts: productRows,
+  };
+}
+
+async function updateClaudeSummary() {
+  const endpoint = window.CLAUDE_PROXY_URL;
+  const status = document.getElementById("claudeStatus");
+  if (!endpoint) {
+    status.textContent = "Claude endpoint не налаштовано";
+    return;
+  }
+  if (!state.data) {
+    status.textContent = "Спочатку завантажте CSV-файли";
+    return;
+  }
+  status.textContent = "Claude аналізує дані...";
+  document.getElementById("claudeSummaryButton").disabled = true;
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(buildClaudePayload()),
+    });
+    if (!response.ok) throw new Error(`Claude proxy returned ${response.status}`);
+    const result = await response.json();
+    if (result.headline) document.getElementById("aiHeadline").textContent = result.headline;
+    if (result.summary) document.getElementById("aiNarrative").textContent = result.summary;
+    status.textContent = "Оновлено через Claude";
+    state.summaryMode = "claude";
+  } catch {
+    status.textContent = "Claude недоступний, показано локальне резюме";
+    renderAI();
+  } finally {
+    document.getElementById("claudeSummaryButton").disabled = false;
+  }
+}
+
 function focusProductReason(row) {
   const reasons = [];
   if (row.netProfitCurrent < 0) reasons.push(`у поточному місяці мінус ${formatMoney(Math.abs(row.netProfitCurrent))}`);
@@ -584,6 +661,9 @@ function renderKpis() {
 function renderAI() {
   document.getElementById("aiHeadline").textContent = state.data.aiInsights.headline;
   document.getElementById("aiNarrative").textContent = state.data.aiInsights.narrative;
+  const hasClaude = Boolean(window.CLAUDE_PROXY_URL);
+  document.getElementById("claudeSummaryButton").disabled = !hasClaude;
+  document.getElementById("claudeStatus").textContent = hasClaude ? "Claude summary доступний" : "Claude endpoint не налаштовано";
 }
 
 function renderCountries() {
@@ -642,6 +722,7 @@ function renderWatchlist() {
 function applyComparison() {
   if (!state.source || state.currentMonth === state.previousMonth) return;
   state.data = compareData(state.source, state.currentMonth, state.previousMonth);
+  state.summaryMode = "local";
   render();
 }
 
@@ -672,6 +753,7 @@ function bindEvents() {
   });
   document.getElementById("countryMetric").addEventListener("change", renderCountries);
   document.getElementById("topMetric").addEventListener("change", renderTopProducts);
+  document.getElementById("claudeSummaryButton").addEventListener("click", updateClaudeSummary);
 }
 
 bindEvents();

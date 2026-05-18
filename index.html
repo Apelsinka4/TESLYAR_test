@@ -12,14 +12,14 @@
         <span class="brand-mark">A</span>
         <div>
           <strong>Amazon EU</strong>
-          <span>P&L дашборд</span>
+          <span>P&L dashboard</span>
         </div>
       </div>
       <nav aria-label="Dashboard sections">
         <a href="#overview" class="active">Огляд</a>
         <a href="#countries">Країни</a>
         <a href="#products">Артикули</a>
-        <a href="#ai">AI-аналітик</a>
+        <a href="#summary">Summary</a>
       </nav>
       <div class="source-note" id="sourceNote">Дані ще не завантажено.</div>
     </aside>
@@ -28,7 +28,7 @@
       <section class="topbar" id="overview">
         <div>
           <p class="eyebrow" id="periodTitle">Період не вибрано</p>
-          <h1>Стан портфелю за 10 секунд</h1>
+          <h1>Аналітика портфелю</h1>
         </div>
         <div class="month-pill">7 маркетплейсів ЄС</div>
       </section>
@@ -57,14 +57,18 @@
 
       <section class="kpi-grid" id="kpiGrid" aria-label="Key portfolio metrics"></section>
 
-      <section class="insight-band" id="ai">
+      <section class="insight-band" id="summary">
         <div>
-          <p class="eyebrow">AI-фіча</p>
-          <h2>Автокоментар: що змінилось</h2>
+          <p class="eyebrow">Аналітичне резюме</p>
+          <h2>Executive summary</h2>
           <p id="aiNarrative"></p>
+          <div class="summary-actions">
+            <button id="claudeSummaryButton" type="button">Оновити через Claude</button>
+            <span id="claudeStatus">Claude endpoint не налаштовано</span>
+          </div>
         </div>
         <div class="headline-card">
-          <span>Сигнал</span>
+          <span>Ключовий висновок</span>
           <strong id="aiHeadline">Loading...</strong>
         </div>
       </section>
@@ -74,13 +78,13 @@
           <div class="panel-header">
             <div>
               <p class="eyebrow">Розріз по країнах</p>
-              <h2>Де портфель виріс або просів</h2>
+              <h2>P&L портфелю по країнах</h2>
             </div>
             <select id="countryMetric" aria-label="Country metric">
               <option value="salesDelta">Зміна продажів</option>
               <option value="netProfitDelta">Зміна прибутку</option>
               <option value="marginDelta">Зміна маржі</option>
-              <option value="ppcAcosApril">PPC ACOS</option>
+              <option value="ppcAcosCurrent">PPC ACOS</option>
             </select>
           </div>
           <div class="table-wrap">
@@ -88,9 +92,9 @@
               <thead>
                 <tr>
                   <th>Країна</th>
-                  <th>Продажі квіт.</th>
+                  <th>Продажі</th>
                   <th>Продажі MoM</th>
-                  <th>Прибуток квіт.</th>
+                  <th>Прибуток</th>
                   <th>Прибуток MoM</th>
                   <th>Маржа</th>
                   <th>PPC ACOS</th>
@@ -108,8 +112,8 @@
               <h2>Лідери за метрикою</h2>
             </div>
             <select id="topMetric" aria-label="Top product metric">
-              <option value="salesApril">Продажі</option>
-              <option value="netProfitApril">Чистий прибуток</option>
+              <option value="salesCurrent">Продажі</option>
+              <option value="netProfitCurrent">Чистий прибуток</option>
               <option value="netProfitDelta">Зростання прибутку</option>
               <option value="attentionScore">Рейтинг уваги</option>
             </select>
@@ -130,6 +134,7 @@
       </section>
     </main>
 
+    <script src="config.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
