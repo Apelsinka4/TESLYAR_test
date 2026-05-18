@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Amazon Europe Profit Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">A</span>
+        <div>
+          <strong>Amazon EU</strong>
+          <span>P&L дашборд</span>
+        </div>
+      </div>
+      <nav aria-label="Dashboard sections">
+        <a href="#overview" class="active">Огляд</a>
+        <a href="#countries">Країни</a>
+        <a href="#products">Артикули</a>
+        <a href="#ai">AI-аналітик</a>
+      </nav>
+      <div class="source-note" id="sourceNote">Дані ще не завантажено.</div>
+    </aside>
+
+    <main>
+      <section class="topbar" id="overview">
+        <div>
+          <p class="eyebrow" id="periodTitle">Період не вибрано</p>
+          <h1>Стан портфелю за 10 секунд</h1>
+        </div>
+        <div class="month-pill">7 маркетплейсів ЄС</div>
+      </section>
+
+      <section class="upload-panel">
+        <div>
+          <p class="eyebrow">Оновлення даних</p>
+          <h2>Закиньте P&L/PPC CSV за потрібні місяці</h2>
+          <p id="uploadStatus">Виберіть CSV-файли, щоб побудувати дашборд.</p>
+        </div>
+        <label class="upload-button">
+          <input id="fileInput" type="file" accept=".csv" multiple />
+          Вибрати CSV
+        </label>
+        <div class="period-controls">
+          <label>
+            Поточний місяць
+            <select id="currentMonth" aria-label="Поточний місяць"></select>
+          </label>
+          <label>
+            Порівняти з
+            <select id="previousMonth" aria-label="Попередній місяць"></select>
+          </label>
+        </div>
+      </section>
+
+      <section class="kpi-grid" id="kpiGrid" aria-label="Key portfolio metrics"></section>
+
+      <section class="insight-band" id="ai">
+        <div>
+          <p class="eyebrow">AI-фіча</p>
+          <h2>Автокоментар: що змінилось</h2>
+          <p id="aiNarrative"></p>
+        </div>
+        <div class="headline-card">
+          <span>Сигнал</span>
+          <strong id="aiHeadline">Loading...</strong>
+        </div>
+      </section>
+
+      <section class="section-grid">
+        <div class="panel wide" id="countries">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Розріз по країнах</p>
+              <h2>Де портфель виріс або просів</h2>
+            </div>
+            <select id="countryMetric" aria-label="Country metric">
+              <option value="salesDelta">Зміна продажів</option>
+              <option value="netProfitDelta">Зміна прибутку</option>
+              <option value="marginDelta">Зміна маржі</option>
+              <option value="ppcAcosApril">PPC ACOS</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Країна</th>
+                  <th>Продажі квіт.</th>
+                  <th>Продажі MoM</th>
+                  <th>Прибуток квіт.</th>
+                  <th>Прибуток MoM</th>
+                  <th>Маржа</th>
+                  <th>PPC ACOS</th>
+                </tr>
+              </thead>
+              <tbody id="countryRows"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Top N</p>
+              <h2>Лідери за метрикою</h2>
+            </div>
+            <select id="topMetric" aria-label="Top product metric">
+              <option value="salesApril">Продажі</option>
+              <option value="netProfitApril">Чистий прибуток</option>
+              <option value="netProfitDelta">Зростання прибутку</option>
+              <option value="attentionScore">Рейтинг уваги</option>
+            </select>
+          </div>
+          <div class="rank-list" id="topProducts"></div>
+        </div>
+      </section>
+
+      <section class="panel" id="products">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Watchlist артикулів</p>
+            <h2>3-5 ASIN, на які варто подивитись</h2>
+          </div>
+          <span class="muted">Згенеровано зі змін продажів, прибутку, маржі та реклами</span>
+        </div>
+        <div class="watchlist" id="watchlist"></div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

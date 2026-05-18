@@ -1,0 +1,5 @@
+input/*.csv
+data/*.json
+*.log
+.DS_Store
+Thumbs.db
