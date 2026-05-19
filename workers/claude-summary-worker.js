@@ -41,7 +41,8 @@ export default {
     });
 
     if (!response.ok) {
-      return json({ error: "Claude request failed" }, response.status);
+      const message = await response.text();
+      return json({ error: "Claude request failed", status: response.status, details: message }, response.status);
     }
 
     const payload = await response.json();

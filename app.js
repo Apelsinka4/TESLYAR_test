@@ -585,8 +585,10 @@ async function updateClaudeSummary() {
     if (result.summary) document.getElementById("aiNarrative").textContent = result.summary;
     status.textContent = "Оновлено через Claude";
     state.summaryMode = "claude";
-  } catch {
-    status.textContent = "Claude недоступний, показано локальне резюме";
+  } catch (error) {
+    status.textContent = error.message.includes("529")
+      ? "Claude тимчасово перевантажений, показано локальне резюме"
+      : "Claude недоступний, показано локальне резюме";
     renderAI();
   } finally {
     document.getElementById("claudeSummaryButton").disabled = false;
