@@ -39,7 +39,7 @@ GitHub Pages не може безпечно зберігати `ANTHROPIC_API_KE
 window.CLAUDE_PROXY_URL = "https://your-worker.your-subdomain.workers.dev";
 ```
 
-Worker використовує Anthropic Messages API і легку модель `claude-3-5-haiku-20241022`.
+Worker використовує Anthropic Messages API і легку модель `claude-haiku-4-5-20251001`.
 
 ## Стек і чому так
 

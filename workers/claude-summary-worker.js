@@ -22,7 +22,7 @@ export default {
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: env.CLAUDE_MODEL || "claude-3-5-haiku-20241022",
+        model: env.CLAUDE_MODEL || "claude-haiku-4-5-20251001",
         max_tokens: 700,
         temperature: 0.2,
         system: "Ти фінансовий аналітик Amazon marketplace. Пиши українською, коротко, без вигаданих даних. Поверни тільки JSON.",
