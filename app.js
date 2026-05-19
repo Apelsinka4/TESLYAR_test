@@ -111,7 +111,6 @@ const state = {
   months: [],
   currentMonth: null,
   previousMonth: null,
-  summaryMode: "local",
 };
 
 function parseMonth(filename) {
@@ -584,7 +583,6 @@ async function updateClaudeSummary() {
     if (result.headline) document.getElementById("aiHeadline").textContent = result.headline;
     if (result.summary) document.getElementById("aiNarrative").textContent = result.summary;
     status.textContent = "Оновлено через Claude";
-    state.summaryMode = "claude";
   } catch (error) {
     status.textContent = error.message.includes("529")
       ? "Claude тимчасово перевантажений, показано локальне резюме"
@@ -724,7 +722,6 @@ function renderWatchlist() {
 function applyComparison() {
   if (!state.source || state.currentMonth === state.previousMonth) return;
   state.data = compareData(state.source, state.currentMonth, state.previousMonth);
-  state.summaryMode = "local";
   render();
 }
 
